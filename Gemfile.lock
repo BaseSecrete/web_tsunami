@@ -1,0 +1,12 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    mime-types (1.18)
+    typhoeus (0.3.3)
+      mime-types
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  typhoeus
