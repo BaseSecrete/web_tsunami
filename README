@@ -1,3 +1,9 @@
 Benchmark your web application.
 
-See example.rb to see how it's working.
+Why not using Apache Benchmark or any similar tool?
+
+Because some times we need to send unique requests and AB doesn't fit for that need.
+
+Check example.rb to see how it's working.
+
+More documentation and gem is coming soon.
