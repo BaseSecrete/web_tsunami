@@ -18,8 +18,7 @@ module WebTsunami
     end
 
     def requests
-      (@requests = Typhoeus::Hydra.new).disable_memoization unless @requests
-      @requests
+      @requests ||= Typhoeus::Hydra.new
     end
 
     def get(url, &block)
@@ -28,7 +27,7 @@ module WebTsunami
         if response.timed_out?
           puts "Timeout #{url}"
         elsif response.code == 0
-          puts "#{response.curl_error_message} #{url}"
+          puts "#{response.return_message} #{url}"
         elsif !response.success? && response.code != 302
           puts "#{response.code} #{url}"
         end
@@ -37,7 +36,7 @@ module WebTsunami
     end
 
     def start
-      concurrency.times { |i| run }
+      concurrency.times { run }
       requests.run
     end
 
