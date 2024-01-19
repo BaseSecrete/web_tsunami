@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.homepage      = "https://github.com/BaseSecrete/web_tsunami"
   s.summary       = "Tailor-made load testing for web apps"
   s.description   = "Write realistic scenarios to test the load of a web application."
+  s.license       = "MIT"
 
   s.files         = `git ls-files`.split("\n")
   s.require_paths = ["."]
