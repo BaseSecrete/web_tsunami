@@ -1,3 +1,5 @@
+<img align="right" width="120px" src="./web_tsunami.png">
+
 # Web Tsunami
 
 Write tailor-made scenarios for load testing web apps
