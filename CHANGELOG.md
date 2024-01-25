@@ -1,6 +1,6 @@
 # Changelog of Web Tsunami
 
-## Unreleased
+## 0.2.0 (2024-01-25)
 
 * Add methods post, put, patch and delete
 * Improve README with an advanced example
