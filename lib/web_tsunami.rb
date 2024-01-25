@@ -13,7 +13,6 @@ module WebTsunami
     end
 
     def initialize(concurrency)
-      @sleeps = {}
       @concurrency = concurrency
     end
 
@@ -21,8 +20,29 @@ module WebTsunami
       @requests ||= Typhoeus::Hydra.new
     end
 
-    def get(url, &block)
-      requests.queue(req = Typhoeus::Request.new(url, request_options))
+    def get(url, options = {}, &block)
+      request(:get, url, options, &block)
+    end
+
+    def post(url, options = {}, &block)
+      request(:post, url, options, &block)
+    end
+
+    def put(url, options = {}, &block)
+      request(:put, url, options, &block)
+    end
+
+    def patch(url, options = {}, &block)
+      request(:patch, url, options, &block)
+    end
+
+    def delete(url, options = {}, &block)
+      request(:delete, url, options, &block)
+    end
+
+    def request(method, url, options, &block)
+      req = Typhoeus::Request.new(url, {method: method}.merge(options))
+      requests.queue(req)
       req.on_complete do |response|
         if response.timed_out?
           puts "Timeout #{url}"
@@ -42,10 +62,6 @@ module WebTsunami
 
     def run
       raise NotImplementedError
-    end
-
-    def request_options
-      {}
     end
 
   end
