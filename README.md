@@ -15,6 +15,9 @@ To the best of my knowledge, no tool could do this.
 The goal is to focus only on the scenario without thinking about forking, threads and non blocking IOs.
 Fortunately there is [Typhoeus](https://github.com/typhoeus/typhoeus) to send parallel HTTP requests.
 
+I wrote a blog post where I share [my load testing habits](https://www.rorvswild.com/blog/2024/ruby-on-rails-load-testing-habits).
+If you are here, that might interest you.
+
 ## How
 
 Web Tsunami is a tiny class that forks every seconds and sends as many requests as expected.
