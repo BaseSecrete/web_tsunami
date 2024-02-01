@@ -1,6 +1,6 @@
 # Changelog of Web Tsunami
 
-## Unreleased
+## 0.3.0 (2024-02-01)
 
 * Add session object to handle automatically cookies and CSRF tokens
 
