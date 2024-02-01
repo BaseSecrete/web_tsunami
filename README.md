@@ -56,69 +56,34 @@ SearchTsunami.start(concurrency: 100, duration: 60 * 10)
 In this scenario, a visitor comes on the index page, then search for _stress test_, then go on a random page of the search result, and finally found the stress test page.
 It introduces a unique parameters which is the page number.
 It's nice, but it could have almost be done with Siege.
-Let me show you a more advanced scenario.
+Let me show you a more realistic scenario.
 
 ```ruby
 require "web_tsunami"
-require "json"
 
-class RegistrationTsunami < WebTsunami::Scenario
-  # Simulate a visitor coming on the index page,
-  # then going to the registration form,
-  # and finally submitting the form.
+class SessionTsunami < WebTsunami::Scenario
   def run
-    get("http://site.example/") do |response|
-      get("http://site.example/account/new") do |response|
-        post("http://site.example/account", post_account_options(response)) do |response|
-          # Then visiting the dashboard, and so on.
+    # The session object stores cookies and automatically submit CSRF token with forms
+    session = WebTsunami::Session.new(self, "https://site.example")
+    session.get("/") do
+      session.get("/account/new") do
+        # An authenticity_token param is automatically added by the session
+        session.post("/account", body: {account: "#{rand(1000000)}@email.test", password: "password"}}) do |response|
+          # The session stores the Set-Cookie header and will provide it to the next requests
+          session.get("/dashboard") do # Redirection after registration
+            # And so on
+          end
         end
       end
     end
   end
-
-  private
-
-  def post_account_options(response)
-    # In order to not be blocked by the Cross-Site Request Forgery, the request must contain :
-    #   1. Cookie header
-    #   2. authenticity_token form param
-    {
-      headers: build_post_headers(response),
-      body: JSON.generate(
-        authenticity_token: extract_csrf_token(response.body),
-        user: {
-          name: name = rand.to_s[2..-1],
-          email: "#{name}@domain.test",
-          password: name,
-        }
-      ),
-    }
-  end
-
-  def build_post_headers(response)
-    {
-      "Origin" => response.request&.base_url,
-      "Content-Type" => "application/json",
-      "Cookie" => response.headers["Set-Cookie"],
-      # To Simulate a post XmlHttpRequest from JavaScript, you should provide these headers :
-      # "X-CSRF-Token" => extract_csrf_token(response.body),
-      # "X-Requested-With" => "XMLHttpRequest"
-    }
-  end
-
-  CSRF_REGEX = /<meta name="csrf-token" content="([^"]+)"/
-
-  def extract_csrf_token(html)
-    html.match(CSRF_REGEX)[1]
-  end
 end
 
-# Simulates 100 concurrent visitors every second for 10 minutes
-RegistrationTsunami.start(concurrency: 100, duration: 10)
+SessionTsunami.start(concurrency: 100, duration: 60 * 10)
 ```
 
-This is more complex because it handles CSRF and every submitted forms are unique.
-Indeed emails must be unique, so it's not possible to send the same data everytime.
+This is more realistic because it handles CSRF tokens and cookies.
+Thus the scenario can submit forms and behaves a little bit more like a real visitor.
 
 ## Output and result
 
