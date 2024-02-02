@@ -71,7 +71,7 @@ class SessionTsunami < WebTsunami::Scenario
     session.get("/") do
       session.get("/account/new") do
         # An authenticity_token param is automatically added by the session
-        session.post("/account", body: {account: "#{rand(1000000)}@email.test", password: "password"}}) do |response|
+        session.post("/account", body: {account: {email: "#{rand(1000000)}@email.test", password: "password"}}) do |response|
           # The session stores the Set-Cookie header and will provide it to the next requests
           session.get("/dashboard") do # Redirection after registration
             # And so on
